@@ -9,30 +9,28 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.xx.study</groupId>
-    <artifactId>spring-cloud</artifactId>
+    <artifactId>zuul</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>spring-cloud</name>
+    <name>zuul</name>
     <description>Demo project for Spring Cloud</description>
 
     <properties>
         <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     </properties>
-
-    <modules>
-        <module>eureka-server</module>
-        <module>eureka-client</module>
-        <module>ribbon</module>
-        <module>feign</module>
-        <module>zuul</module>
-        <module>config-server</module>
-        <module>config-client</module>
-    </modules>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
         </dependency>
 
         <dependency>
@@ -41,6 +39,18 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

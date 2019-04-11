@@ -1,5 +1,9 @@
 # Spring-Cloud-Demo
 
+	在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统
+	
+	
+	
 ### eureka Eureka 服务注册与发现
 
 	eureka-server 服务注册中心 默认端口：8761
@@ -17,7 +21,10 @@
 	  还需要在配置文件中注明自己的服务注册中心的地址，
 	  需要指明spring.application.name,这个很重要，这在以后的服务与服务之间相互调用一般都是根据这个name 。
   
+  
+  
 ### ribbon 服务消费者
+
     ribbon是一个负载均衡客户端，可以很好的控制htt和tcp的一些行为。Feign默认集成了ribbon。
 	ribbon 已经默认实现了这些配置bean：
 
@@ -38,7 +45,10 @@
 	通过之前注入ioc容器的restTemplate来消费spring.application.name服务的“/XX”接口，
 	直接用的程序名替代了具体的url地址，在ribbon中它会根据服务名来选择具体的服务实例，根据服务实例在请求的时候会用具体的url替换掉服务名，
 
+	
+	
 ### Feign 服务消费者
+
     Feign是一个声明式的伪Http客户端，它使得写Http客户端变得更简单。使用Feign，只需要创建一个接口并注解。它具有可插拔的注解特性，
 	可使用Feign 注解和JAX-RS注解。Feign支持可插拔的编码器和解码器。
 	Feign默认集成了Ribbon，并和Eureka结合，默认实现了负载均衡的效果。
@@ -49,7 +59,10 @@
 	在程序的启动类ServiceFeignApplication ，加上@EnableFeignClients注解开启Feign的功能：
 	定义一个feign接口，通过@ FeignClient（“服务名”），来指定调用哪个服务。
 	
+	
+	
 ### Hystrix 断路器
+
 	在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在SpringCloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。
 	由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫痪。
 	服务与服务之间的依赖性，故障会传播，会对整个微服务系统造成灾难性的严重后果，这就是服务故障的“雪崩”效应。
@@ -74,3 +87,30 @@
 		首先在servic下面新建一个包，命名为fallback；
 		在fallback里面新建一个类 纳入spring容器，并实现接口 进行方法重写，返回当某个服务断开时你希望看到的提示内容
 
+### Zuul 路由网关
+
+	Zuul的主要功能是路由转发和过滤器。路由功能是微服务的一部分，比如／api/user转发到到user服务，/api/shop转发到到shop服务。zuul默认和Ribbon结合实现了负载均衡的功能。
+	zuul有以下功能：
+		Authentication
+		Insights
+		Stress Testing
+		Canary Testing
+		Dynamic Routing
+		Service Migration
+		Load Shedding
+		Security
+		Static Response handling
+		Active/Active traffic management
+		
+	zuul不仅只是路由，并且还能过滤，做一些安全验证
+		filterType：返回一个字符串代表过滤器的类型，在zuul中定义了四种不同生命周期的过滤器类型，具体如下：
+			pre：路由之前
+			routing：路由之时
+			post： 路由之后
+			error：发送错误调用
+		filterOrder：过滤的顺序
+		shouldFilter：这里可以写逻辑判断，是否要过滤，true,永远过滤。
+		run：过滤器的具体逻辑。可用很复杂，包括查sql，nosql去判断该请求到底有没有权限访问。
+
+		
+### Spring Cloud Config 分布式配置中心

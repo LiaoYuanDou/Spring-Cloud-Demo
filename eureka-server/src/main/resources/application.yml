@@ -1,3 +1,4 @@
+### 服务端口
 server:
   port: 8088
 
@@ -12,6 +13,7 @@ eureka:
     fetch-registry: false
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+### 服务名称
 spring:
   application:
     name: eureka-server

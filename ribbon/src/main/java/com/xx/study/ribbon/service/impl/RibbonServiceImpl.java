@@ -1,5 +1,6 @@
 package com.xx.study.ribbon.service.impl;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.xx.study.ribbon.service.RibbonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,12 @@ public class RibbonServiceImpl implements RibbonService {
      * @date 2019/4/11 13:50
      */
     @Override
+    @HystrixCommand(fallbackMethod = "helloError")
     public String helloServiceRibbon(String name) {
         return restTemplate.getForObject("http://EUREKA-CLIENT/eurekaClient/test?name=" + name, String.class);
+    }
+
+    public String helloError(String name) {
+        return "hello," + name + ",sorry,error!";
     }
 }

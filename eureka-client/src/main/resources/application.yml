@@ -1,8 +1,11 @@
+### 服务端口
 server:
-  port: 8090
+  port: 8089
+### 服务名字
 spring:
   application:
     name: eureka-client
+### 注册中心地址
 eureka:
   client:
     service-url:

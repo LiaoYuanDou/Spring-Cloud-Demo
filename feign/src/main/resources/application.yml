@@ -1,9 +1,16 @@
+### 端口
 server:
   port: 8092
+### 服务名称
 spring:
   application:
     name: service-feign
+### 服务注册中心地址
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8088/eureka/
+### 使用断路器
+feign:
+  hystrix:
+    enabled: true

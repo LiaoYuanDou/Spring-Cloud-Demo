@@ -114,3 +114,29 @@
 
 		
 ### Spring Cloud Config 分布式配置中心
+    在分布式系统中，由于服务数量巨多，为了方便服务配置文件统一管理，实时更新，所以需要分布式配置中心组件。在Spring Cloud中，有分布式配置中心组件spring cloud config ，它支持配置服务放在配置服务的内存中（即本地），也支持放在远程Git仓库中。在spring cloud config 组件中，分两个角色，一是config server，二是config client。
+	
+	Config Server
+		在程序的入口Application类加上@EnableConfigServer注解开启配置服务器的功能
+		在程序的配置文件application.properties文件配置
+			spring.cloud.config.server.git.uri：配置git仓库地址
+			spring.cloud.config.server.git.searchPaths：配置仓库路径
+			spring.cloud.config.label：配置仓库的分支
+			spring.cloud.config.server.git.username：访问git仓库的用户名
+			spring.cloud.config.server.git.password：访问git仓库的用户密码
+			如果Git仓库为公开仓库，可以不填写用户名和密码，如果是私有仓库需要填写
+		启动程序：访问http://ip:port/foo/dev
+			{"name":"foo","profiles":["dev"],"label":null,"version":"c4e740dbe9cfd3512f44e4bf250c7f7d9b5c187d","state":null,"propertySources":[]}
+			证明配置服务中心可以从远程程序获取配置信息。
+		http请求地址和资源文件映射如下:
+			/{application}/{profile}[/{label}]
+			/{application}-{profile}.yml
+			/{label}/{application}-{profile}.yml
+			/{application}-{profile}.properties
+			/{label}/{application}-{profile}.properties
+			
+	Config Client		
+		客户端的spring.application.name配置config-clent是和Git服务器上面的文件名相对应的，如果你的客户端是其他名字就报错找不到参数。
+		客户端加载到的配置文件的配置项会覆盖本项目已有配置，
+		比如客户端你自己配置的端口是8881，但是如果读取到config-clent-dev这个配置文件中也有配置端口为8882，那么此时客户端访问的地址应该是8882
+		配置文件名将Application.properties改成bootstrap.properties,详情可见SpringCloud官方文档（配置文件优先级问题）

@@ -140,3 +140,32 @@
 		客户端加载到的配置文件的配置项会覆盖本项目已有配置，
 		比如客户端你自己配置的端口是8881，但是如果读取到config-clent-dev这个配置文件中也有配置端口为8882，那么此时客户端访问的地址应该是8882
 		配置文件名将Application.properties改成bootstrap.properties,详情可见SpringCloud官方文档（配置文件优先级问题）
+
+		
+### Spring Cloud Bus 消息总线
+		Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。
+		config-client pom文件加上起步依赖spring-cloud-starter-bus-amqp
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-bus-amqp</artifactId>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-actuator</artifactId>
+			</dependency>
+
+		在配置文件bootstrap.properties中加上RabbitMq的配置，包括RabbitMq的地址、端口，用户名、密码。并需要加上spring.cloud.bus的三个配置
+			spring.rabbitmq.host=localhost
+			spring.rabbitmq.port=5672
+			spring.rabbitmq.username=guest
+			spring.rabbitmq.password=guest
+
+			spring.cloud.bus.enabled=true
+			spring.cloud.bus.trace.enabled=true
+			management.endpoints.web.exposure.include=bus-refresh
+
+		读取配置文件的类上加上 @RefreshScope 
+		改变配置文件的值。如果是传统的做法，需要重启服务，才能达到配置文件的更新。此时，我们只需要发送post请求：http://ip:port/actuator/bus-refresh，你会发现config-client会重新读取配置文件
+		另外，/actuator/bus-refresh接口可以指定服务，即使用"destination"参数，比如 “/actuator/bus-refresh?destination=customers:**” 即刷新服务名为customers的所有服务。
+		当git文件更改的时候，通过pc端用post 向端口的config-client发送请求/bus/refresh／；此时端口会发送一个消息，由消息总线向其他服务传递，从而使整个微服务集群都达到更新配置文件。

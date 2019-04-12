@@ -12,7 +12,7 @@
     <artifactId>ribbon</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ribbon</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Demo project for Spring Cloud 服务消费者（rest+ribbon）</description>
 
     <properties>
         <java.version>1.8</java.version>

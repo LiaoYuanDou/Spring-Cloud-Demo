@@ -1,0 +1,9 @@
+server:
+  port: 8096
+  use-forward-headers: true
+  compression:
+    enabled: true
+    mime-types: application/json,application/javascript,text/css,image/svg
+spring:
+  application:
+    name: zipkin-server

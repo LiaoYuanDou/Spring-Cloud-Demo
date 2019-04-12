@@ -27,6 +27,7 @@
         <module>zuul</module>
         <module>config-server</module>
         <module>config-client</module>
+        <module>zipkin</module>
     </modules>
 
     <dependencies>

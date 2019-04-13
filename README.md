@@ -63,7 +63,7 @@
 ### ribbon 服务消费者
 
     ribbon是一个负载均衡客户端，可以很好的控制htt和tcp的一些行为。Feign默认集成了ribbon。
-	ribbon 已经默认实现了这些配置bean：
+		ribbon 已经默认实现了这些配置bean：
 
 		IClientConfig ribbonClientConfig: DefaultClientConfigImpl
 
@@ -77,24 +77,24 @@
 
 		ILoadBalancer ribbonLoadBalancer: ZoneAwareLoadBalancer
 		
-	在工程的启动类中,通过@EnableDiscoveryClient向服务中心注册；并且向程序的ioc注入一个bean: restTemplate;并通过@LoadBalanced注解表明这个restRemplate开启负载均衡的功能。
-	
-	通过之前注入ioc容器的restTemplate来消费spring.application.name服务的“/XX”接口，
-	直接用的程序名替代了具体的url地址，在ribbon中它会根据服务名来选择具体的服务实例，根据服务实例在请求的时候会用具体的url替换掉服务名，
+		在工程的启动类中,通过@EnableDiscoveryClient向服务中心注册；并且向程序的ioc注入一个bean: restTemplate;并通过@LoadBalanced注解表明这个restRemplate开启负载均衡的功能。
+		
+		通过之前注入ioc容器的restTemplate来消费spring.application.name服务的“/XX”接口，
+		直接用的程序名替代了具体的url地址，在ribbon中它会根据服务名来选择具体的服务实例，根据服务实例在请求的时候会用具体的url替换掉服务名，
 
 	
 	
 ### Feign 服务消费者
 
     Feign是一个声明式的伪Http客户端，它使得写Http客户端变得更简单。使用Feign，只需要创建一个接口并注解。它具有可插拔的注解特性，
-	可使用Feign 注解和JAX-RS注解。Feign支持可插拔的编码器和解码器。
-	Feign默认集成了Ribbon，并和Eureka结合，默认实现了负载均衡的效果。
+		可使用Feign 注解和JAX-RS注解。Feign支持可插拔的编码器和解码器。
+		Feign默认集成了Ribbon，并和Eureka结合，默认实现了负载均衡的效果。
 		Feign 采用的是基于接口的注解
 		Feign 整合了ribbon，具有负载均衡的能力
 		整合了Hystrix，具有熔断的能力
 		
-	在程序的启动类ServiceFeignApplication ，加上@EnableFeignClients注解开启Feign的功能：
-	定义一个feign接口，通过@ FeignClient（“服务名”），来指定调用哪个服务。
+		在程序的启动类ServiceFeignApplication ，加上@EnableFeignClients注解开启Feign的功能：
+		定义一个feign接口，通过@ FeignClient（“服务名”），来指定调用哪个服务。
 	
 	
 	
@@ -127,7 +127,7 @@
 ### Zuul 路由网关
 
 	Zuul的主要功能是路由转发和过滤器。路由功能是微服务的一部分，比如／api/user转发到到user服务，/api/shop转发到到shop服务。zuul默认和Ribbon结合实现了负载均衡的功能。
-	zuul有以下功能：
+	Zuul有以下功能：
 		Authentication
 		Insights
 		Stress Testing
@@ -139,7 +139,7 @@
 		Static Response handling
 		Active/Active traffic management
 		
-	zuul不仅只是路由，并且还能过滤，做一些安全验证
+	Zuul不仅只是路由，并且还能过滤，做一些安全验证
 		filterType：返回一个字符串代表过滤器的类型，在zuul中定义了四种不同生命周期的过滤器类型，具体如下：
 			pre：路由之前
 			routing：路由之时
@@ -153,30 +153,30 @@
 ### Spring Cloud Config 分布式配置中心
     在分布式系统中，由于服务数量巨多，为了方便服务配置文件统一管理，实时更新，所以需要分布式配置中心组件。在Spring Cloud中，有分布式配置中心组件spring cloud config ，它支持配置服务放在配置服务的内存中（即本地），也支持放在远程Git仓库中。在spring cloud config 组件中，分两个角色，一是config server，二是config client。
 	
-	Config Server
-		在程序的入口Application类加上@EnableConfigServer注解开启配置服务器的功能
-		在程序的配置文件application.properties文件配置
-			spring.cloud.config.server.git.uri：配置git仓库地址
-			spring.cloud.config.server.git.searchPaths：配置仓库路径
-			spring.cloud.config.label：配置仓库的分支
-			spring.cloud.config.server.git.username：访问git仓库的用户名
-			spring.cloud.config.server.git.password：访问git仓库的用户密码
-			如果Git仓库为公开仓库，可以不填写用户名和密码，如果是私有仓库需要填写
-		启动程序：访问http://ip:port/foo/dev
-			{"name":"foo","profiles":["dev"],"label":null,"version":"c4e740dbe9cfd3512f44e4bf250c7f7d9b5c187d","state":null,"propertySources":[]}
-			证明配置服务中心可以从远程程序获取配置信息。
-		http请求地址和资源文件映射如下:
-			/{application}/{profile}[/{label}]
-			/{application}-{profile}.yml
-			/{label}/{application}-{profile}.yml
-			/{application}-{profile}.properties
-			/{label}/{application}-{profile}.properties
-			
-	Config Client		
-		客户端的spring.application.name配置config-clent是和Git服务器上面的文件名相对应的，如果你的客户端是其他名字就报错找不到参数。
-		客户端加载到的配置文件的配置项会覆盖本项目已有配置，
-		比如客户端你自己配置的端口是8881，但是如果读取到config-clent-dev这个配置文件中也有配置端口为8882，那么此时客户端访问的地址应该是8882
-		配置文件名将Application.properties改成bootstrap.properties,详情可见SpringCloud官方文档（配置文件优先级问题）
+		Config Server
+			在程序的入口Application类加上@EnableConfigServer注解开启配置服务器的功能
+			在程序的配置文件application.properties文件配置
+				spring.cloud.config.server.git.uri：配置git仓库地址
+				spring.cloud.config.server.git.searchPaths：配置仓库路径
+				spring.cloud.config.label：配置仓库的分支
+				spring.cloud.config.server.git.username：访问git仓库的用户名
+				spring.cloud.config.server.git.password：访问git仓库的用户密码
+				如果Git仓库为公开仓库，可以不填写用户名和密码，如果是私有仓库需要填写
+			启动程序：访问http://ip:port/foo/dev
+				{"name":"foo","profiles":["dev"],"label":null,"version":"c4e740dbe9cfd3512f44e4bf250c7f7d9b5c187d","state":null,"propertySources":[]}
+				证明配置服务中心可以从远程程序获取配置信息。
+			http请求地址和资源文件映射如下:
+				/{application}/{profile}[/{label}]
+				/{application}-{profile}.yml
+				/{label}/{application}-{profile}.yml
+				/{application}-{profile}.properties
+				/{label}/{application}-{profile}.properties
+				
+		Config Client		
+			客户端的spring.application.name配置config-clent是和Git服务器上面的文件名相对应的，如果你的客户端是其他名字就报错找不到参数。
+			客户端加载到的配置文件的配置项会覆盖本项目已有配置，
+			比如客户端你自己配置的端口是8881，但是如果读取到config-clent-dev这个配置文件中也有配置端口为8882，那么此时客户端访问的地址应该是8882
+			配置文件名将Application.properties改成bootstrap.properties,详情可见SpringCloud官方文档（配置文件优先级问题）
 
 		
 ### Spring Cloud Bus 消息总线
@@ -209,7 +209,7 @@
 
 		
 		
-### zipkin 服务链路追踪(Spring Cloud Sleuth)
+### Zipkin 服务链路追踪(Spring Cloud Sleuth)
 		Spring Cloud Sleuth 主要功能就是在分布式系统中提供追踪解决方案，并且兼容支持了 zipkin，只需要在pom文件中引入相应的依赖即可。
 		微服务架构上通过业务来划分服务的，通过REST调用，对外暴露的一个接口，可能需要很多个服务协同才能完成这个接口功能，
 		如果链路上任何一个服务出现问题或者网络超时，都会形成导致接口调用失败。随着业务的不断扩张，服务之间互相调用会越来越复杂。
@@ -244,26 +244,82 @@
 
 
 ### Hystrix Dashboard 断路器监控
- 		在微服务架构中为例保证程序的可用性，防止程序出错导致网络阻塞，出现了断路器模型。
- 		断路器的状况反应了一个程序的可用性和健壮性，它是一个重要指标。
- 		Hystrix Dashboard是作为断路器状态的一个组件，提供了数据监控和友好的图形化界面。
- 		pom文件中引入
- 			<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
-        </dependency>
-		程序的入口类，加上@EnableHystrix注解开启断路器，这个是必须的，并且需要在程序中声明断路点HystrixCommand；
-		加上@EnableHystrixDashboard注解，开启HystrixDashboard
+	 		在微服务架构中为例保证程序的可用性，防止程序出错导致网络阻塞，出现了断路器模型。
+	 		断路器的状况反应了一个程序的可用性和健壮性，它是一个重要指标。
+	 		Hystrix Dashboard是作为断路器状态的一个组件，提供了数据监控和友好的图形化界面。
+		 		pom文件中引入
+		 			<dependency>
+		            <groupId>org.springframework.boot</groupId>
+		            <artifactId>spring-boot-starter-actuator</artifactId>
+		        </dependency>
+		        <dependency>
+		            <groupId>org.springframework.cloud</groupId>
+		            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		        </dependency>
+		        <dependency>
+		            <groupId>org.springframework.cloud</groupId>
+		            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+		        </dependency>
+			程序的入口类，加上@EnableHystrix注解开启断路器，这个是必须的，并且需要在程序中声明断路点HystrixCommand；
+			加上@EnableHystrixDashboard注解，开启HystrixDashboard
+			
+			打开http://localhost:port/actuator/hystrix.stream，可以看到一些具体的数据：
+			打开localhost:port/hystrix
+			在界面依次输入：http://localhost:port/actuator/hystrix.stream 、2000 、miya；点确定。
+			重新刷新hystrix.stream网页，会看到良好的图形化界面
+			
+			
+			
+### Hystrix Turbine 断路器聚合监控 
+		当我们有很多个服务的时候，这就需要聚合所以服务的Hystrix Dashboard的数据了。这就需要用到Spring Cloud的另一个组件了，即Hystrix Turbine。
+		看单个的Hystrix Dashboard的数据并没有什么多大的价值，要想看这个系统的Hystrix Dashboard数据就需要用到Hystrix Turbine。
+		Hystrix Turbine将每个服务Hystrix Dashboard数据进行了整合。Hystrix Turbine的使用非常简单，只需要引入相应的依赖和加上注解和配置就可以了。
+				pom文件中引入
+						<dependency>
+		            <groupId>org.springframework.boot</groupId>
+		            <artifactId>spring-boot-starter-actuator</artifactId>
+		        </dependency>
+		        <dependency>
+		            <groupId>org.springframework.cloud</groupId>
+		            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		        </dependency>
+		        <dependency>
+		            <groupId>org.springframework.cloud</groupId>
+		            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+		        </dependency>
+		        <dependency>
+		            <groupId>org.springframework.cloud</groupId>
+		            <artifactId>spring-cloud-starter-netflix-turbine</artifactId>
+		        </dependency>
 		
-		打开http://localhost:port/actuator/hystrix.stream，可以看到一些具体的数据：
-		打开localhost:port/hystrix
-		在界面依次输入：http://localhost:port/actuator/hystrix.stream 、2000 、miya；点确定。
-		重新刷新hystrix.stream网页，会看到良好的图形化界面
+		在其入口类加上注解@EnableTurbine，开启turbine，@EnableTurbine注解包含了@EnableDiscoveryClient注解，即开启了注册服务。
+		
+		application.yml文件增加配置
+				spring:
+						application:
+								name: service-turbine
+
+				eureka:
+				  client:
+				    serviceUrl:
+				      defaultZone: http://localhost:8761/eureka/
+				management:
+				  endpoints:
+				    web:
+				      exposure:
+				        include: "*"
+				      cors:
+				        allowed-origins: "*"
+				        allowed-methods: "*"
+
+				turbine:
+				  app-config: service-hi,service-lucy
+				  aggregator:
+				    clusterConfig: default
+				  clusterNameExpression: new String("default")
+				  combine-host: true
+				  instanceUrlSuffix:
+				    default: actuator/hystrix.stream  
+			
+			http://localhost:port/turbine.stream
+			http://localhost:port/hystrix,输入监控流http://localhost:port/turbine.stream

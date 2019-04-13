@@ -30,6 +30,7 @@
         <module>config-server</module>
         <module>config-client</module>
         <module>zipkin-server</module>
+        <module>turbine</module>
     </modules>
 
     <dependencyManagement>

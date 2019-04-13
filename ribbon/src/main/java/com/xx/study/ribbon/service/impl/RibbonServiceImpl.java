@@ -1,8 +1,10 @@
 package com.xx.study.ribbon.service.impl;
 
+import brave.sampler.Sampler;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.xx.study.ribbon.service.RibbonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,4 +38,10 @@ public class RibbonServiceImpl implements RibbonService {
     public String helloError(String name) {
         return "hello," + name + ",sorry,error!";
     }
+
+    @Bean
+    public Sampler defaultSampler() {
+        return Sampler.ALWAYS_SAMPLE;
+    }
+
 }

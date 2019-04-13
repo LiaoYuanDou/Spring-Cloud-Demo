@@ -169,3 +169,37 @@
 		改变配置文件的值。如果是传统的做法，需要重启服务，才能达到配置文件的更新。此时，我们只需要发送post请求：http://ip:port/actuator/bus-refresh，你会发现config-client会重新读取配置文件
 		另外，/actuator/bus-refresh接口可以指定服务，即使用"destination"参数，比如 “/actuator/bus-refresh?destination=customers:**” 即刷新服务名为customers的所有服务。
 		当git文件更改的时候，通过pc端用post 向端口的config-client发送请求/bus/refresh／；此时端口会发送一个消息，由消息总线向其他服务传递，从而使整个微服务集群都达到更新配置文件。
+
+		
+		
+### zipkin 服务链路追踪(Spring Cloud Sleuth)
+		Spring Cloud Sleuth 主要功能就是在分布式系统中提供追踪解决方案，并且兼容支持了 zipkin，只需要在pom文件中引入相应的依赖即可。
+		微服务架构上通过业务来划分服务的，通过REST调用，对外暴露的一个接口，可能需要很多个服务协同才能完成这个接口功能，
+		如果链路上任何一个服务出现问题或者网络超时，都会形成导致接口调用失败。随着业务的不断扩张，服务之间互相调用会越来越复杂。
+			Span：基本工作单元，例如，在一个新建的span中发送一个RPC等同于发送一个回应请求给RPC，span通过一个64位ID唯一标识，trace以另一个64位ID表示，span还有其他数据信息，比如摘要、时间戳事件、关键值注释(tags)、span的ID、以及进度ID(通常是IP地址)
+						span在不断的启动和停止，同时记录了时间信息，当你创建了一个span，你必须在未来的某个时刻停止它。
+			Trace：一系列spans组成的一个树状结构，例如，如果你正在跑一个分布式大数据工程，你可能需要创建一个trace。
+			Annotation：用来及时记录一个事件的存在，一些核心annotations用来定义一个请求的开始和结束
+				cs - Client Sent -客户端发起一个请求，这个annotion描述了这个span的开始
+				sr - Server Received -服务端获得请求并准备开始处理它，如果将其sr减去cs时间戳便可得到网络延迟
+				ss - Server Sent -注解表明请求处理的完成(当请求返回客户端)，如果ss减去sr时间戳便可得到服务端需要的处理请求时间
+				cr - Client Received -表明span的结束，客户端成功接收到服务端的回复，如果cr减去cs时间戳便可得到客户端从服务端获取回复的所有所需时间
+		
+		在spring Cloud为Finchley版本的时候，已经不需要自己构建Zipkin Server了，只需要下载jar即可，下载地址：
+				https://dl.bintray.com/openzipkin/maven/io/zipkin/java/zipkin-server/
+				java -jar zipkin-server-2.10.1-exec.jar 
+				默认端口是9411
+				
+		服务暴露端和调用段引入
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-zipkin</artifactId>
+			</dependency>
+		在其配置文件application.yml指定zipkin server的地址，头通过配置“spring.zipkin.base-url”指定：
+			spring.zipkin.base-url=http://localhost:9411
+			在启动类里面并加上
+						@Bean
+						public Sampler defaultSampler() {
+							return Sampler.ALWAYS_SAMPLE;
+						}
+		访问http://localhost:9411/

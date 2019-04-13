@@ -240,8 +240,3 @@
 							return Sampler.ALWAYS_SAMPLE;
 						}
 		访问http://localhost:9411/
-
-
-
-### Hystrix Dashboard 断路器监控
- 

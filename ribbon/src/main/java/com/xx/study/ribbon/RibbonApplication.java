@@ -2,15 +2,18 @@ package com.xx.study.ribbon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 /**
  * 在程序的启动类加 @EnableDiscoveryClient向服务中心注册 @EnableHystrix注解开启Hystrix：
+ * 开启HystrixDashboard @EnableHystrixDashboard @EnableCircuitBreaker ：启动断路器
  *
  * @param
  * @author XX
@@ -21,6 +24,8 @@ import org.springframework.web.client.RestTemplate;
 @EnableEurekaClient
 @EnableDiscoveryClient
 @EnableHystrix
+@EnableHystrixDashboard
+@EnableCircuitBreaker
 public class RibbonApplication {
 
     public static void main(String[] args) {

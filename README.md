@@ -244,4 +244,26 @@
 
 
 ### Hystrix Dashboard 断路器监控
- 
+ 		在微服务架构中为例保证程序的可用性，防止程序出错导致网络阻塞，出现了断路器模型。
+ 		断路器的状况反应了一个程序的可用性和健壮性，它是一个重要指标。
+ 		Hystrix Dashboard是作为断路器状态的一个组件，提供了数据监控和友好的图形化界面。
+ 		pom文件中引入
+ 			<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+        </dependency>
+		程序的入口类，加上@EnableHystrix注解开启断路器，这个是必须的，并且需要在程序中声明断路点HystrixCommand；
+		加上@EnableHystrixDashboard注解，开启HystrixDashboard
+		
+		打开http://localhost:port/actuator/hystrix.stream，可以看到一些具体的数据：
+		打开localhost:port/hystrix
+		在界面依次输入：http://localhost:port/actuator/hystrix.stream 、2000 、miya；点确定。
+		重新刷新hystrix.stream网页，会看到良好的图形化界面

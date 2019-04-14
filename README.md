@@ -323,3 +323,45 @@
 			
 			http://localhost:port/turbine.stream
 			http://localhost:port/hystrix,输入监控流http://localhost:port/turbine.stream
+			
+			
+			
+### consul 服务注册
+			spring cloud consul 组件，它是一个提供服务发现和配置的工具。consul具有分布式、高可用、高扩展性。
+				使用 Raft 算法来保证一致性, 比复杂的 Paxos 算法更直接. 相比较而言, zookeeper 采用的是 Paxos, 
+				etcd 使用的则是 Raft。	
+				支持多数据中心，内外网的服务采用不同的端口进行监听。 多数据中心集群可以避免单数据中心的单点故障,而其部署则需要考虑网络延迟, 分片等情况等。 zookeeper 和 etcd 均不提供多数据中心功能的支持。
+				支持健康检查。 etcd 不提供此功能。
+				支持 http 和 dns 协议接口。 zookeeper 的集成较为复杂, etcd 只支持 http 协议。
+				官方提供 web 管理界面, etcd 无此功能。
+				综合比较, Consul 作为服务注册和配置管理的新星, 比较值得关注和研究。
+			consul 具有以下性质：
+					服务发现：consul通过http 方式注册服务，并且服务与服务之间相互感应。
+					服务健康监测
+					key/value 存储
+					多数据中心
+			去官网下载：https://www.consul.io/downloads.html 对应系统的版本
+		  cmd启动： consul agent -dev
+		  打开网址：http://localhost:8500 ，可以看到界面，相关服务发现的界面。
+		  
+		  引入pom文件
+			  	<!--consul中健康检查需要用到actuator，不添加会check failing-->
+	        <dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-starter-actuator</artifactId>
+	        </dependency>
+	         <!--服务注册(consul)监听依赖-->
+	        <dependency>
+	            <groupId>org.springframework.cloud</groupId>
+	            <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+	        </dependency>
+	        
+	     application.yml配置
+	     			spring:
+	     			  cloud:
+						    consul:
+						      host: localhost
+						      port: 8500
+						      discovery:
+						        service-name: service-consul #注册在consul上面的名字，在consul的调用中，是通过此名字调用的
+						        register-health-check: true #健康检查，保证服务处于启动状态，建议开启
